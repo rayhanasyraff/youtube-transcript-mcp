@@ -9,6 +9,7 @@ from src.jobs.manager import JobManager
 from src.transcription.pipeline import TranscriptionPipeline
 from src.utils.logging import setup_logging
 from src.youtube.client import YouTubeClient
+import os
 
 settings = Settings.from_env()
 setup_logging(settings.log_level)
@@ -31,4 +32,11 @@ instructions for fetching the remaining sections. Clickable timestamps use
 https://www.youtube.com/watch?v=VIDEO_ID&t=SECONDSs
 """
 
-mcp = FastMCP("youtube-transcript", instructions=INSTRUCTIONS)
+mcp = FastMCP(
+    "youtube-transcript",
+    instructions=INSTRUCTIONS,
+    host="0.0.0.0",
+    port=int(os.environ.get("PORT", "8080")),
+    stateless_http=True,
+    json_response=True,
+)
